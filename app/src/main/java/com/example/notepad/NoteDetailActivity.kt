@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,7 +13,7 @@ import android.widget.TextView
 class NoteDetailActivity : AppCompatActivity() {
 //companion object instance d'une classe unique pour une classe singleton
    //companion de la class objet
-    companion object Factory{
+    companion object {
         val EXTRA_NOTE="note"
         val EXTRA_NOTE_index="noteIndex"
         val REQUEST_EDIT=1
@@ -47,17 +48,20 @@ class NoteDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.action_save ->{
-                return true}
+                saveNote()
+                return true
+            }
         }
 
             return super.onOptionsItemSelected(item)
     }
 
     fun saveNote(){
-        note.title= title_view.toString();
-        note.text=text_view.toString()
+
+        note.title= title_view.text.toString();
+        note.text=text_view.text.toString()
         intent= Intent()
-        intent.putExtra(EXTRA_NOTE,note)
+        intent.putExtra(EXTRA_NOTE,note as Parcelable)
         intent.putExtra(EXTRA_NOTE_index,note_index)
 
         setResult(Activity.RESULT_OK,intent)

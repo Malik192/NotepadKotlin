@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -26,18 +27,18 @@ class NoteListActivity :AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_list)
         notes= mutableListOf<Note>()
-        notes.add(Note("Note 1","BLACKY"))
-        notes.add(Note("malik","BLACKY"))
-        notes.add(Note("Nabil","cscdcs"))
-        notes.add(Note("linda","cdosdcdscdscdj"))
-        notes.add(Note("maman","cdoscsccsdcs"))
-        notes.add(Note("papa","cdocsodj"))
+        notes.add(Note("Note 1","BLACK"))
+        notes.add(Note("Note 2","BLACK"))
+        notes.add(Note("Note 3","cscdcs"))
+        notes.add(Note("Note 4","cdosdcdscdscdj"))
+        notes.add(Note("Note 5","cdoscsccsdcs"))
+        notes.add(Note("Note 6","cdocsodj"))
 //initialisation de l'adapteur en implementant view onclick
         adapter= NoteAdapter(notes,this)
 
-        //RecycleView
+        //RecyclerView
         val recyclerview =findViewById(R.id.notes_recycler_view) as RecyclerView
-        //recuperer le recycler view en initialisant le layout lanager
+        //recuperer le recycler view en initialisant le layout manager
         recyclerview.layoutManager = LinearLayoutManager(this)
  //connecter le recycler view a l'adapter
         recyclerview.adapter=adapter
@@ -63,10 +64,11 @@ class NoteListActivity :AppCompatActivity(), View.OnClickListener {
         {
             NoteDetailActivity.REQUEST_EDIT->processEditNote(data)
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun processEditNote(data: Intent) {
-        val note=data.getParcelableExtra<Note>(NoteDetailActivity.EXTRA_NOTE)
+        val note : Note=data.getParcelableExtra<Note>(NoteDetailActivity.EXTRA_NOTE)
         val noteIndex=data.getIntExtra(NoteDetailActivity.EXTRA_NOTE_index,-1)
         saveNote(note,noteIndex)
     }
@@ -79,9 +81,9 @@ class NoteListActivity :AppCompatActivity(), View.OnClickListener {
     fun showNoteDetail(Index :Int){
         val note=notes[Index]
         val intent=Intent(this,NoteDetailActivity::class.java)
-        intent.putExtra(NoteDetailActivity.Factory.EXTRA_NOTE,note)
-        intent.putExtra(NoteDetailActivity.Factory.EXTRA_NOTE_index,Index)
-    startActivityForResult(intent,NoteDetailActivity.REQUEST_EDIT)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE,note)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_index,Index)
+        startActivityForResult(intent,NoteDetailActivity.REQUEST_EDIT)
     }
 
 }
