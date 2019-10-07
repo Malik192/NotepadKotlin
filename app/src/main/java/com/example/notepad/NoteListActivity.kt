@@ -1,5 +1,7 @@
 package com.example.notepad
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -49,12 +51,37 @@ class NoteListActivity :AppCompatActivity(), View.OnClickListener {
         }
 
     }
+    //requestCode =1
+    //result
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK || data==null ){
+            return
+        }
+        when (requestCode)
+        {
+            NoteDetailActivity.REQUEST_EDIT->processEditNote(data)
+        }
+    }
+
+    private fun processEditNote(data: Intent) {
+        val note=data.getParcelableExtra<Note>(NoteDetailActivity.EXTRA_NOTE)
+        val noteIndex=data.getIntExtra(NoteDetailActivity.EXTRA_NOTE_index,-1)
+        saveNote(note,noteIndex)
+    }
+
+    private fun saveNote(note: Note, noteIndex: Int) {
+        notes[noteIndex]= note
+        adapter.notifyDataSetChanged()
+    }
+
     fun showNoteDetail(Index :Int){
         val note=notes[Index]
         val intent=Intent(this,NoteDetailActivity::class.java)
         intent.putExtra(NoteDetailActivity.Factory.EXTRA_NOTE,note)
         intent.putExtra(NoteDetailActivity.Factory.EXTRA_NOTE_index,Index)
-    startActivity(intent)
+    startActivityForResult(intent,NoteDetailActivity.REQUEST_EDIT)
     }
 
 }
